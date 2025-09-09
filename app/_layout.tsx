@@ -7,10 +7,12 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-import "../global.css";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+
+// Note: CSS import temporarily disabled due to bundling issues
+// import "../global.css";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

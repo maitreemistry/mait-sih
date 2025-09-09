@@ -33,15 +33,18 @@ export type {
 
 // Services
 export { AuthService } from "../services/auth";
-export { BaseService } from "../services/database";
+export { EnhancedBaseService } from "../services/database";
 export {
   FarmTaskService,
-  NegotiationService,
   OrderService,
   ProductListingService,
   ProductService,
   ProfileService,
-  ReviewService,
+  farmTaskService,
+  orderService,
+  productListingService,
+  productService,
+  profileService,
 } from "../services/entities";
 
 // Contexts

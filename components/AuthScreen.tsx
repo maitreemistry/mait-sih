@@ -1,5 +1,4 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { formatAuthError } from "@/utils/errors";
 import React, { useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -17,11 +16,11 @@ export default function AuthScreen() {
 
     try {
       const { error } = isSignUp
-        ? await signUp(email, password)
-        : await signIn(email, password);
+        ? await signUp({ email, password })
+        : await signIn({ email, password });
 
       if (error) {
-        Alert.alert("Error", formatAuthError(error) || "Authentication failed");
+        Alert.alert("Error", error.message || "Authentication failed");
       } else {
         Alert.alert(
           "Success",
@@ -39,7 +38,7 @@ export default function AuthScreen() {
   const handleSignOut = async () => {
     const { error } = await signOut();
     if (error) {
-      Alert.alert("Error", formatAuthError(error) || "Sign out failed");
+      Alert.alert("Error", error.message || "Sign out failed");
     }
   };
 

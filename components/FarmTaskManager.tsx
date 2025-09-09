@@ -1,8 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@/hooks/database/useQuery";
-import { FarmTaskService } from "@/services/entities";
+import { farmTaskService } from "@/services/entities";
 import type { FarmTask, TaskStatus } from "@/types/supabase";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -13,39 +12,82 @@ import {
   View,
 } from "react-native";
 
-const farmTaskService = new FarmTaskService();
-
 export default function FarmTaskManager() {
   const { user } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
+  const [tasks, setTasks] = useState<FarmTask[]>([]);
+  const [loading, setLoading] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     due_date: "",
   });
 
-  const {
-    data: tasks,
-    loading,
-    refetch,
-  } = useQuery<FarmTask[]>(() => farmTaskService.getByFarmer(user?.id || ""), {
-    enabled: !!user?.id,
-  });
+  const fetchTasks = useCallback(async () => {
+    if (!user?.id) return;
 
-  // Temporarily simplified - create and update operations will be added once typing issues are resolved
+    setLoading(true);
+    try {
+      const response = await farmTaskService.getByFarmer(user.id);
+      if (response.error) {
+        Alert.alert("Error", response.error.message);
+        return;
+      }
+      setTasks(response.data || []);
+    } catch {
+      Alert.alert("Error", "Failed to fetch tasks");
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
   const handleCreateTask = async () => {
-    Alert.alert(
-      "Info",
-      "Task creation feature will be available once database operations are configured."
-    );
-    setModalVisible(false);
+    if (!user?.id || !newTask.title.trim()) {
+      Alert.alert("Error", "Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const response = await farmTaskService.create({
+        farmer_id: user.id,
+        title: newTask.title.trim(),
+        description: newTask.description.trim() || null,
+        due_date: newTask.due_date || null,
+        status: "pending" as TaskStatus,
+      } as FarmTask);
+
+      if (response.error) {
+        Alert.alert("Error", response.error.message);
+        return;
+      }
+
+      Alert.alert("Success", "Task created successfully");
+      setNewTask({ title: "", description: "", due_date: "" });
+      setModalVisible(false);
+      fetchTasks();
+    } catch {
+      Alert.alert("Error", "Failed to create task");
+    }
   };
 
   const handleStatusChange = async (taskId: string, status: TaskStatus) => {
-    Alert.alert(
-      "Info",
-      "Status update feature will be available once database operations are configured."
-    );
+    try {
+      const response = await farmTaskService.updateStatus(taskId, status);
+
+      if (response.error) {
+        Alert.alert("Error", response.error.message);
+        return;
+      }
+
+      Alert.alert("Success", "Task status updated successfully");
+      fetchTasks();
+    } catch {
+      Alert.alert("Error", "Failed to update task status");
+    }
   };
 
   const getStatusColor = (status: TaskStatus) => {
@@ -195,7 +237,7 @@ export default function FarmTaskManager() {
         contentContainerStyle={{ padding: 16 }}
         showsVerticalScrollIndicator={false}
         refreshing={loading}
-        onRefresh={refetch}
+        onRefresh={fetchTasks}
         ListEmptyComponent={
           <View className="bg-white rounded-xl p-8 items-center">
             <Text className="text-lg font-medium text-neutral-700 text-center mb-2">

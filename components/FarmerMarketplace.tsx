@@ -1,10 +1,7 @@
-import { useQuery } from "@/hooks/database/useQuery";
-import { ProductListingService } from "@/services/entities";
+import { productListingService } from "@/services/entities";
 import type { ProductListing } from "@/types/supabase";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-
-const productListingService = new ProductListingService();
 
 interface ProductListingWithDetails extends ProductListing {
   products?: {
@@ -22,14 +19,30 @@ interface ProductListingWithDetails extends ProductListing {
 }
 
 export default function FarmerMarketplace() {
-  const {
-    data: listings,
-    loading,
-    error,
-    refetch,
-  } = useQuery<ProductListingWithDetails[]>(() =>
-    productListingService.getAvailableListings()
-  );
+  const [listings, setListings] = useState<ProductListingWithDetails[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchListings = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await productListingService.getAvailable();
+      if (response.error) {
+        setError(response.error.message);
+        return;
+      }
+      setListings(response.data || []);
+    } catch {
+      setError("Failed to fetch listings");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchListings();
+  }, []);
 
   const renderListingItem = ({ item }: { item: ProductListingWithDetails }) => (
     <View className="bg-white rounded-xl p-4 mb-4 shadow-soft border border-neutral-200">
@@ -121,12 +134,10 @@ export default function FarmerMarketplace() {
           <Text className="text-lg font-semibold text-error-600 text-center mb-2">
             Unable to load listings
           </Text>
-          <Text className="text-neutral-600 text-center mb-4">
-            {error.message}
-          </Text>
+          <Text className="text-neutral-600 text-center mb-4">{error}</Text>
           <TouchableOpacity
             className="bg-primary-500 py-3 px-6 rounded-lg active:bg-primary-600"
-            onPress={refetch}
+            onPress={fetchListings}
           >
             <Text className="text-white font-semibold text-center">
               Try Again
@@ -155,7 +166,7 @@ export default function FarmerMarketplace() {
         contentContainerStyle={{ padding: 16 }}
         showsVerticalScrollIndicator={false}
         refreshing={loading}
-        onRefresh={refetch}
+        onRefresh={fetchListings}
         ListEmptyComponent={
           <View className="bg-white rounded-xl p-8 items-center">
             <Text className="text-lg font-medium text-neutral-700 text-center mb-2">

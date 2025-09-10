@@ -45,54 +45,54 @@ export default function FarmerMarketplace() {
   }, []);
 
   const renderListingItem = ({ item }: { item: ProductListingWithDetails }) => (
-    <View className="bg-white rounded-xl p-4 mb-4 shadow-soft border border-neutral-200">
+    <View className="bg-white rounded-2xl p-4 mb-4 shadow-lg border-2 border-green-200">
       <View className="flex-row">
         {item.products?.image_url && (
           <Image
             source={{ uri: item.products.image_url }}
-            className="w-20 h-20 rounded-lg mr-4"
+            className="w-20 h-20 rounded-xl mr-4"
             resizeMode="cover"
           />
         )}
 
         <View className="flex-1">
           <View className="flex-row items-center justify-between mb-1">
-            <Text className="text-lg font-semibold text-neutral-900">
+            <Text className="text-lg font-semibold text-green-900">
               {item.products?.name}
             </Text>
             {item.profiles?.is_verified && (
-              <View className="bg-success-100 px-2 py-1 rounded-full">
-                <Text className="text-success-700 text-xs font-medium">
+              <View className="bg-green-100 px-2 py-1 rounded-full">
+                <Text className="text-green-700 text-xs font-medium">
                   ✓ Verified
                 </Text>
               </View>
             )}
           </View>
 
-          <Text className="text-sm text-neutral-600 mb-2">
+          <Text className="text-sm text-green-600 mb-2">
             by {item.profiles?.full_name || "Anonymous Farmer"}
           </Text>
 
           <View className="flex-row items-center justify-between">
             <View>
-              <Text className="text-xl font-bold text-primary-600">
+              <Text className="text-xl font-bold text-green-600">
                 ₹{item.price_per_unit}
               </Text>
-              <Text className="text-xs text-neutral-500">
+              <Text className="text-xs text-green-500">
                 per {item.unit_of_measure}
               </Text>
             </View>
 
             <View className="items-end">
-              <Text className="text-sm font-medium text-neutral-700">
+              <Text className="text-sm font-medium text-green-700">
                 {item.quantity_available} {item.unit_of_measure}
               </Text>
-              <Text className="text-xs text-neutral-500">available</Text>
+              <Text className="text-xs text-green-500">available</Text>
             </View>
           </View>
 
           {item.harvest_date && (
-            <Text className="text-xs text-neutral-500 mt-2">
+            <Text className="text-xs text-green-500 mt-2">
               Harvested: {new Date(item.harvest_date).toLocaleDateString()}
             </Text>
           )}
@@ -100,14 +100,14 @@ export default function FarmerMarketplace() {
       </View>
 
       <View className="flex-row mt-4 space-x-3">
-        <TouchableOpacity className="flex-1 bg-primary-500 py-3 rounded-lg active:bg-primary-600">
+        <TouchableOpacity className="flex-1 bg-green-500 py-3 rounded-xl active:bg-green-600 shadow-md">
           <Text className="text-white font-semibold text-center">
             View Details
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex-1 bg-neutral-100 py-3 rounded-lg active:bg-neutral-200">
-          <Text className="text-neutral-700 font-semibold text-center">
+        <TouchableOpacity className="flex-1 bg-green-100 py-3 rounded-xl active:bg-green-200">
+          <Text className="text-green-700 font-semibold text-center">
             Make Offer
           </Text>
         </TouchableOpacity>
@@ -117,9 +117,9 @@ export default function FarmerMarketplace() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-neutral-50">
-        <View className="bg-white p-8 rounded-xl shadow-soft">
-          <Text className="text-lg font-medium text-neutral-700 text-center">
+      <View className="flex-1 justify-center items-center bg-green-50">
+        <View className="bg-white p-8 rounded-2xl shadow-lg border border-green-200">
+          <Text className="text-lg font-medium text-green-700 text-center">
             Loading fresh produce... 🌱
           </Text>
         </View>
@@ -129,14 +129,14 @@ export default function FarmerMarketplace() {
 
   if (error) {
     return (
-      <View className="flex-1 justify-center items-center bg-neutral-50 px-6">
-        <View className="bg-white p-8 rounded-xl shadow-soft">
-          <Text className="text-lg font-semibold text-error-600 text-center mb-2">
+      <View className="flex-1 justify-center items-center bg-green-50 px-6">
+        <View className="bg-white p-8 rounded-2xl shadow-lg border border-green-200">
+          <Text className="text-lg font-semibold text-red-600 text-center mb-2">
             Unable to load listings
           </Text>
-          <Text className="text-neutral-600 text-center mb-4">{error}</Text>
+          <Text className="text-green-700 text-center mb-4">{error}</Text>
           <TouchableOpacity
-            className="bg-primary-500 py-3 px-6 rounded-lg active:bg-primary-600"
+            className="bg-green-500 py-3 px-6 rounded-xl active:bg-green-600 shadow-md"
             onPress={fetchListings}
           >
             <Text className="text-white font-semibold text-center">
@@ -149,12 +149,12 @@ export default function FarmerMarketplace() {
   }
 
   return (
-    <View className="flex-1 bg-neutral-50">
-      <View className="bg-white pt-12 pb-6 px-6 shadow-sm">
-        <Text className="text-2xl font-bold text-neutral-900 mb-2">
+    <View className="flex-1 bg-green-50">
+      <View className="bg-green-700 pt-12 pb-6 px-6 shadow-lg">
+        <Text className="text-2xl font-bold text-white mb-2">
           Fresh From Farm 🚜
         </Text>
-        <Text className="text-neutral-600">
+        <Text className="text-green-200">
           Discover quality produce directly from verified farmers
         </Text>
       </View>
@@ -168,11 +168,11 @@ export default function FarmerMarketplace() {
         refreshing={loading}
         onRefresh={fetchListings}
         ListEmptyComponent={
-          <View className="bg-white rounded-xl p-8 items-center">
-            <Text className="text-lg font-medium text-neutral-700 text-center mb-2">
+          <View className="bg-white rounded-2xl p-8 items-center border border-green-200">
+            <Text className="text-lg font-medium text-green-700 text-center mb-2">
               No listings available
             </Text>
-            <Text className="text-neutral-500 text-center">
+            <Text className="text-green-500 text-center">
               Check back later for fresh produce!
             </Text>
           </View>

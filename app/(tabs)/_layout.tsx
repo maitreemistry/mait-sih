@@ -38,14 +38,21 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={26} name="leaf.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={26} name="paperplane.fill" color={color} />,
+          title: 'Schemes',
+          tabBarIcon: ({ color }) => <IconSymbol size={26} name="star.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="scheme-tracker"
+        options={{
+          title: 'Govt Schemes',
+          tabBarIcon: ({ color }) => <IconSymbol size={26} name="shield.lefthalf.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -72,7 +79,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Messages',
+          title: 'Support',
           tabBarIcon: ({ color }) => <IconSymbol size={26} name="bubble.left.and.bubble.right.fill" color={color} />,
         }}
       />
@@ -81,6 +88,13 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <IconSymbol size={26} name="person.crop.circle.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="quality-assessment"
+        options={{
+          title: 'AI Quality',
+          tabBarIcon: ({ color }) => <IconSymbol size={26} name="camera.viewfinder" color={color} />,
         }}
       />
     </Tabs>

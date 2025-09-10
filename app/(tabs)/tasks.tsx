@@ -1,17 +1,17 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import FarmTaskManager from '@/components/FarmTaskManager';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import SectionCard from '@/components/ui/SectionCard';
+import React from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function TasksScreen() {
-  const handleQuickAction = (action) => {
+  const handleQuickAction = (action: string) => {
     // Handle quick actions
     console.log(`Quick action: ${action}`);
   };
 
-  const handleTemplateSelect = (template) => {
+  const handleTemplateSelect = (template: string) => {
     // Handle template selection
     console.log(`Template selected: ${template}`);
   };

@@ -1,8 +1,8 @@
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import SectionCard from '@/components/ui/SectionCard';
 import React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import SectionCard from '@/components/ui/SectionCard';
 
 // Mock user data - replace with actual user data
 const userData = {
@@ -14,12 +14,12 @@ const userData = {
 };
 
 export default function ProfileScreen() {
-  const handleSectionPress = (section) => {
+  const handleSectionPress = (section: string) => {
     // Handle navigation to specific section
     console.log(`Navigate to ${section}`);
   };
 
-  const renderProgressBar = (percentage) => (
+  const renderProgressBar = (percentage: number) => (
     <View style={styles.progressContainer}>
       <View style={styles.progressBar}>
         <View style={[styles.progressFill, { width: `${percentage}%` }]} />
@@ -28,7 +28,7 @@ export default function ProfileScreen() {
     </View>
   );
 
-  const renderCertificationBadge = (cert) => (
+  const renderCertificationBadge = (cert: string) => (
     <View key={cert} style={styles.badge}>
       <ThemedText style={styles.badgeText}>{cert}</ThemedText>
     </View>

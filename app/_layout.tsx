@@ -10,15 +10,22 @@ import "react-native-reanimated";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useIsClient } from "@/hooks/useIsClient";
 
 // Note: CSS import temporarily disabled due to bundling issues
 // import "../global.css";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const isClient = useIsClient();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  // Don't wait for fonts during SSR
+  if (!loaded && !isClient) {
+    return null;
+  }
 
   if (!loaded) {
     // Async font loading only occurs in development.

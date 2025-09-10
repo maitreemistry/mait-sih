@@ -1,5 +1,6 @@
 import type { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useIsClient } from "../hooks/useIsClient";
 import { authService } from "../services/auth";
 import type { ServiceError, ServiceResponse } from "../services/types";
 
@@ -51,12 +52,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ServiceError | null>(null);
+  const isClient = useIsClient();
 
   // Initialize session on mount
   useEffect(() => {
     let mounted = true;
 
     const initializeAuth = async () => {
+      // Skip initialization during SSR
+      if (!isClient) {
+        if (mounted) {
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -93,10 +103,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [isClient]);
 
   // Set up auth state listener
   useEffect(() => {
+    // Skip listener setup during SSR
+    if (!isClient) {
+      return;
+    }
+
     const subscription = authService.onAuthStateChange(
       async (event, session) => {
         setSession(session);
@@ -112,7 +127,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     );
 
     return subscription;
-  }, []);
+  }, [isClient]);
 
   const signUp = async (data: {
     email: string;

@@ -5,7 +5,7 @@
 
 import { RESPONSE_MESSAGES, serviceConfig } from "./config";
 import { logger } from "./logger";
-import { BaseRepository } from "./repository";
+import { BaseRepository } from "./repositories";
 import {
   IBaseService,
   QueryOptions,
@@ -15,7 +15,7 @@ import {
   ServiceResponse,
   ValidationResult,
 } from "./types";
-import { ValidatorFactory } from "./validation";
+import { ValidatorFactory } from "./validators";
 
 export abstract class EnhancedBaseService<T = any> implements IBaseService<T> {
   protected repository: BaseRepository<T>;

@@ -16,24 +16,36 @@ export const serviceConfig: ServiceConfig = {
   requestTimeout: 30000, // 30 seconds
 };
 
-// Database table names (ensures consistency)
+// Database table names (ensures consistency with schema)
 export const TABLE_NAMES = {
+  // Core entities
   PROFILES: "profiles",
   PRODUCTS: "products",
   PRODUCT_LISTINGS: "product_listings",
+
+  // Order management
   ORDERS: "orders",
   ORDER_ITEMS: "order_items",
-  FARM_TASKS: "farm_tasks",
-  NEGOTIATIONS: "negotiations",
-  REVIEWS: "reviews",
-  QUALITY_REPORTS: "quality_reports",
-  LOGISTICS: "logistics",
-  LOGISTICS_ROUTES: "logistics_routes",
   PAYMENTS: "payments",
-  NOTIFICATIONS: "notifications",
-  SUPPORT_TICKETS: "support_tickets",
-  AUDIT_LOGS: "audit_logs",
-  USER_SESSIONS: "user_sessions",
+
+  // Trust & transparency
+  REVIEWS: "reviews",
+  CERTIFICATIONS: "certifications",
+  QUALITY_REPORTS: "quality_reports",
+
+  // Communication & logistics
+  MESSAGES: "messages",
+  SHIPMENTS: "shipments",
+
+  // Retailer platform
+  RETAILER_INVENTORY: "retailer_inventory",
+  COLD_CHAIN_LOGS: "cold_chain_logs",
+
+  // Enhancements
+  BLOCKCHAIN_TX_REFERENCES: "blockchain_tx_references",
+  NEGOTIATIONS: "negotiations",
+  DISPUTES: "disputes",
+  FARM_TASKS: "farm_tasks",
 } as const;
 
 // API response messages
@@ -118,6 +130,14 @@ export const BUSINESS_RULES = {
     MIN_AMOUNT: 10,
     MAX_AMOUNT: 100000,
     CANCELLATION_WINDOW_HOURS: 24,
+    MAX_QUANTITY_PER_ITEM: 10000,
+    MAX_PRICE_PER_UNIT: 50000,
+  },
+  PAYMENT: {
+    MIN_AMOUNT: 1,
+    MAX_AMOUNT: 100000,
+    REFUND_WINDOW_DAYS: 30,
+    PROCESSING_TIMEOUT_MINUTES: 15,
   },
   TASK: {
     MAX_PRIORITY_TASKS: 5,
@@ -131,6 +151,91 @@ export const BUSINESS_RULES = {
   REVIEW: {
     MIN_RATING: 1,
     MAX_RATING: 5,
+    MAX_COMMENT_LENGTH: 1000,
+    MIN_COMMENT_LENGTH: 10,
+    ALLOWED_STATUSES: ["pending", "approved", "rejected"],
     COOLDOWN_DAYS: 1,
+  },
+
+  // Message rules
+  MESSAGE: {
+    MAX_CONTENT_LENGTH: 2000,
+    MIN_CONTENT_LENGTH: 1,
+    ALLOWED_STATUSES: ["sent", "delivered", "read"],
+    ATTACHMENT_MAX_SIZE: 10485760, // 10MB in bytes
+    MAX_ATTACHMENTS: 5,
+    SPAM_COOLDOWN_MINUTES: 1,
+  },
+
+  // Shipment rules
+  SHIPMENT: {
+    ALLOWED_STATUSES: [
+      "pending",
+      "picked_up",
+      "in_transit",
+      "delivered",
+      "returned",
+      "cancelled",
+    ],
+    MAX_TRACKING_NUMBER_LENGTH: 50,
+    MAX_NOTES_LENGTH: 500,
+    DELIVERY_WINDOW_DAYS: 30,
+  },
+
+  // Negotiation rules
+  NEGOTIATION: {
+    ALLOWED_STATUSES: [
+      "pending",
+      "accepted",
+      "rejected",
+      "counter_offered",
+      "expired",
+    ],
+    MAX_COUNTER_OFFERS: 5,
+    DEFAULT_EXPIRY_HOURS: 48,
+    MIN_PRICE_DIFFERENCE_PERCENT: 1,
+    MAX_DISCOUNT_PERCENT: 50,
+    MAX_NOTES_LENGTH: 1000,
+  },
+
+  // Certification rules
+  CERTIFICATION: {
+    ALLOWED_TYPES: [
+      "organic",
+      "fair_trade",
+      "gmp",
+      "haccp",
+      "iso_22000",
+      "rainforest_alliance",
+    ],
+    ALLOWED_STATUSES: [
+      "pending",
+      "verified",
+      "rejected",
+      "expired",
+      "suspended",
+    ],
+    MAX_VALIDITY_YEARS: 5,
+    MIN_VALIDITY_MONTHS: 6,
+    MAX_CERTIFICATE_NUMBER_LENGTH: 50,
+    MAX_NOTES_LENGTH: 2000,
+    REQUIRED_DOCUMENTS: ["certificate", "inspection_report"],
+  },
+
+  // Quality Report rules
+  QUALITY_REPORT: {
+    ALLOWED_STATUSES: ["pending", "approved", "rejected", "under_review"],
+    ALLOWED_GRADES: ["A+", "A", "B+", "B", "C", "D"],
+    MIN_SCORE: 0,
+    MAX_SCORE: 100,
+    MAX_NOTES_LENGTH: 2000,
+    REQUIRED_PARAMETERS: [
+      "appearance",
+      "taste",
+      "texture",
+      "freshness",
+      "packaging",
+    ],
+    MAX_DEFECT_PERCENTAGE: 20,
   },
 } as const;

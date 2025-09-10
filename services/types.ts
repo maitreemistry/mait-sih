@@ -137,6 +137,14 @@ export type Order = Tables["orders"]["Row"];
 export type OrderInsert = Tables["orders"]["Insert"];
 export type OrderUpdate = Tables["orders"]["Update"];
 
+export type OrderItem = Tables["order_items"]["Row"];
+export type OrderItemInsert = Tables["order_items"]["Insert"];
+export type OrderItemUpdate = Tables["order_items"]["Update"];
+
+export type Payment = Tables["payments"]["Row"];
+export type PaymentInsert = Tables["payments"]["Insert"];
+export type PaymentUpdate = Tables["payments"]["Update"];
+
 export type FarmTask = Tables["farm_tasks"]["Row"];
 export type FarmTaskInsert = Tables["farm_tasks"]["Insert"];
 export type FarmTaskUpdate = Tables["farm_tasks"]["Update"];
@@ -144,6 +152,44 @@ export type FarmTaskUpdate = Tables["farm_tasks"]["Update"];
 export type Review = Tables["reviews"]["Row"];
 export type ReviewInsert = Tables["reviews"]["Insert"];
 export type ReviewUpdate = Tables["reviews"]["Update"];
+
+export type Certification = Tables["certifications"]["Row"];
+export type CertificationInsert = Tables["certifications"]["Insert"];
+export type CertificationUpdate = Tables["certifications"]["Update"];
+
+export type QualityReport = Tables["quality_reports"]["Row"];
+export type QualityReportInsert = Tables["quality_reports"]["Insert"];
+export type QualityReportUpdate = Tables["quality_reports"]["Update"];
+
+export type Message = Tables["messages"]["Row"];
+export type MessageInsert = Tables["messages"]["Insert"];
+export type MessageUpdate = Tables["messages"]["Update"];
+
+export type Shipment = Tables["shipments"]["Row"];
+export type ShipmentInsert = Tables["shipments"]["Insert"];
+export type ShipmentUpdate = Tables["shipments"]["Update"];
+
+export type RetailerInventory = Tables["retailer_inventory"]["Row"];
+export type RetailerInventoryInsert = Tables["retailer_inventory"]["Insert"];
+export type RetailerInventoryUpdate = Tables["retailer_inventory"]["Update"];
+
+export type ColdChainLog = Tables["cold_chain_logs"]["Row"];
+export type ColdChainLogInsert = Tables["cold_chain_logs"]["Insert"];
+export type ColdChainLogUpdate = Tables["cold_chain_logs"]["Update"];
+
+export type BlockchainTxReference = Tables["blockchain_tx_references"]["Row"];
+export type BlockchainTxReferenceInsert =
+  Tables["blockchain_tx_references"]["Insert"];
+export type BlockchainTxReferenceUpdate =
+  Tables["blockchain_tx_references"]["Update"];
+
+export type Negotiation = Tables["negotiations"]["Row"];
+export type NegotiationInsert = Tables["negotiations"]["Insert"];
+export type NegotiationUpdate = Tables["negotiations"]["Update"];
+
+export type Dispute = Tables["disputes"]["Row"];
+export type DisputeInsert = Tables["disputes"]["Insert"];
+export type DisputeUpdate = Tables["disputes"]["Update"];
 
 // Service configuration
 export interface ServiceConfig {
@@ -196,4 +242,28 @@ export interface IFarmTaskService extends IBaseService<FarmTask> {
   getByStatus(status: string): Promise<ServiceResponse<FarmTask[]>>;
   getByPriority(priority: string): Promise<ServiceResponse<FarmTask[]>>;
   updateStatus(id: string, status: string): Promise<ServiceResponse<FarmTask>>;
+}
+
+// Additional service interfaces for schema entities
+export interface IOrderItemsService extends IBaseService<OrderItem> {
+  getByOrder(orderId: string): Promise<ServiceResponse<OrderItem[]>>;
+  getByListing(listingId: string): Promise<ServiceResponse<OrderItem[]>>;
+  calculateOrderTotal(orderId: string): Promise<ServiceResponse<number>>;
+}
+
+export interface IPaymentService extends IBaseService<Payment> {
+  getByOrder(orderId: string): Promise<ServiceResponse<Payment[]>>;
+  getByStatus(status: string): Promise<ServiceResponse<Payment[]>>;
+  processPayment(orderData: any): Promise<ServiceResponse<Payment>>;
+  refundPayment(paymentId: string): Promise<ServiceResponse<Payment>>;
+}
+
+export interface IReviewService extends IBaseService<Review> {
+  getByListing(listingId: string): Promise<ServiceResponse<Review[]>>;
+  getByReviewer(reviewerId: string): Promise<ServiceResponse<Review[]>>;
+  getAverageRating(listingId: string): Promise<ServiceResponse<number>>;
+  hasUserReviewed(
+    listingId: string,
+    reviewerId: string
+  ): Promise<ServiceResponse<boolean>>;
 }

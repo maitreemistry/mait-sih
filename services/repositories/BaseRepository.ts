@@ -1,18 +1,18 @@
 /**
- * Repository layer following the Repository pattern
+ * Base Repository class following the Repository pattern
  * Provides data access abstraction and centralized database operations
  */
 
-import { supabase } from "../lib/supabase/client";
-import { ERROR_CODE_MAPPINGS, TABLE_NAMES } from "./config";
-import { logger } from "./logger";
+import { supabase } from "../../lib/supabase/client";
+import { ERROR_CODE_MAPPINGS } from "../config";
+import { logger } from "../logger";
 import {
   FilterOptions,
   IRepository,
   QueryOptions,
   ServiceErrorCode,
   SortOptions,
-} from "./types";
+} from "../types";
 
 export abstract class BaseRepository<T = any> implements IRepository<T> {
   protected tableName: string;
@@ -312,116 +312,5 @@ export abstract class BaseRepository<T = any> implements IRepository<T> {
     } catch (error) {
       return this.handleError(error, "query");
     }
-  }
-}
-
-// Specific repository implementations
-export class ProfileRepository extends BaseRepository {
-  constructor() {
-    super(TABLE_NAMES.PROFILES);
-  }
-
-  async findByRole(role: string): Promise<any> {
-    return this.findWhere([{ column: "role", operator: "eq", value: role }]);
-  }
-
-  async findVerifiedFarmers(): Promise<any> {
-    return this.findWhere([
-      { column: "role", operator: "eq", value: "farmer" },
-      { column: "is_verified", operator: "eq", value: true },
-    ]);
-  }
-}
-
-export class ProductRepository extends BaseRepository {
-  constructor() {
-    super(TABLE_NAMES.PRODUCTS);
-  }
-
-  async findByCategory(category: string): Promise<any> {
-    return this.findWhere([
-      { column: "category", operator: "eq", value: category },
-    ]);
-  }
-
-  async searchByName(query: string): Promise<any> {
-    return this.findWhere([
-      { column: "name", operator: "ilike", value: `%${query}%` },
-    ]);
-  }
-}
-
-export class ProductListingRepository extends BaseRepository {
-  constructor() {
-    super(TABLE_NAMES.PRODUCT_LISTINGS);
-  }
-
-  async findByFarmer(farmerId: string): Promise<any> {
-    return this.query(
-      `
-        *,
-        products (
-          id,
-          name,
-          description,
-          category,
-          image_url
-        ),
-        quality_reports (
-          ai_score,
-          notes
-        )
-      `,
-      [{ column: "farmer_id", operator: "eq", value: farmerId }]
-    );
-  }
-
-  async findAvailable(): Promise<any> {
-    return this.findWhere([
-      { column: "status", operator: "eq", value: "available" },
-    ]);
-  }
-}
-
-export class OrderRepository extends BaseRepository {
-  constructor() {
-    super(TABLE_NAMES.ORDERS);
-  }
-
-  async findByBuyer(buyerId: string): Promise<any> {
-    return this.findWhere([
-      { column: "buyer_id", operator: "eq", value: buyerId },
-    ]);
-  }
-
-  async findByStatus(status: string): Promise<any> {
-    return this.findWhere([
-      { column: "status", operator: "eq", value: status },
-    ]);
-  }
-}
-
-export class FarmTaskRepository extends BaseRepository {
-  constructor() {
-    super(TABLE_NAMES.FARM_TASKS);
-  }
-
-  async findByFarmer(farmerId: string): Promise<any> {
-    return this.findWhere([
-      { column: "farmer_id", operator: "eq", value: farmerId },
-    ]);
-  }
-
-  async findByStatus(status: string): Promise<any> {
-    return this.findWhere([
-      { column: "status", operator: "eq", value: status },
-    ]);
-  }
-
-  async findOverdue(): Promise<any> {
-    return this.findWhere([
-      { column: "due_date", operator: "lt", value: new Date().toISOString() },
-      { column: "status", operator: "neq", value: "completed" },
-    ]);
   }
 }

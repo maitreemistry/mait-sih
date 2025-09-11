@@ -40,6 +40,56 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "pwa": {
+      "name": "AgriChain Odisha - Farmer App",
+      "short_name": "AgriChain",
+      "description": "Comprehensive agricultural platform for Odisha farmers with market intelligence, scheme tracking, and quality assessment",
+      "start_url": "/",
+      "display": "standalone",
+      "theme_color": "#4CAF50",
+      "background_color": "#ffffff",
+      "orientation": "portrait-primary",
+      "scope": "/",
+      "lang": "en-IN",
+      "categories": ["business", "productivity", "utilities"],
+      "icons": [
+        {
+          "src": "./assets/images/icon.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any maskable"
+        },
+        {
+          "src": "./assets/images/icon.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ],
+      "shortcuts": [
+        {
+          "name": "Market Intelligence",
+          "short_name": "Markets",
+          "description": "Check current market prices",
+          "url": "/explore",
+          "icons": [{ "src": "./assets/images/icon.png", "sizes": "96x96" }]
+        },
+        {
+          "name": "Quality Assessment",
+          "short_name": "Quality",
+          "description": "Assess crop quality",
+          "url": "/quality-assessment",
+          "icons": [{ "src": "./assets/images/icon.png", "sizes": "96x96" }]
+        },
+        {
+          "name": "Scheme Tracker",
+          "short_name": "Schemes",
+          "description": "Track government schemes",
+          "url": "/scheme-tracker",
+          "icons": [{ "src": "./assets/images/icon.png", "sizes": "96x96" }]
+        }
+      ]
     }
   }
 }

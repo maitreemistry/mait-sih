@@ -1,19 +1,20 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { Colors } from '../../constants/Colors';
 import { useColorScheme } from '../../hooks/useColorScheme';
 import { MockAIQualityService, QualityAssessmentResult } from '../../services/ai/quality-assessment';
+import { QRCodeData, QRCodeService } from '../../services/qr-code.service';
 import { ThemedText } from '../ThemedText';
 
 export const QualityAssessmentScreen: React.FC = () => {
@@ -21,6 +22,8 @@ export const QualityAssessmentScreen: React.FC = () => {
   const [cropType, setCropType] = useState<string>('rice');
   const [assessmentResult, setAssessmentResult] = useState<QualityAssessmentResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [qrCodeData, setQrCodeData] = useState<QRCodeData | null>(null);
+  const [generatingQR, setGeneratingQR] = useState(false);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
@@ -98,6 +101,35 @@ export const QualityAssessmentScreen: React.FC = () => {
     try {
       const result = await qualityService.assessQualityDemo(imageUri, cropType);
       setAssessmentResult(result);
+
+      // After quality assessment, generate QR code for the batch using QRCodeService
+      setGeneratingQR(true);
+      try {
+        const qrCodeService = new QRCodeService();
+
+        // Prepare actual data for QR code generation
+        const qrRequest = {
+          productId: `prod_${Date.now()}`, // Generate unique product id
+          farmerId: 'farmer123', // TODO: Replace with actual farmer id from auth context or profile
+          batchId: `batch_${Date.now()}`, // Generate unique batch id
+          productData: {
+            name: 'Sample Product', // TODO: Replace with actual product name
+            cropType: cropType,
+            harvestDate: new Date().toISOString(),
+            qualityGrade: result.grade,
+            farmLocation: { latitude: 0, longitude: 0 }, // TODO: Replace with actual farm location
+            certifications: []
+          }
+        };
+
+        // Register product on blockchain and generate QR code
+        const generatedQRCode = await qrCodeService.generateQRCode(qrRequest);
+        setQrCodeData(generatedQRCode);
+      } catch (qrError) {
+        Alert.alert('Error', 'Failed to generate QR code for the batch');
+      } finally {
+        setGeneratingQR(false);
+      }
 
       Toast.show({
         type: 'success',
